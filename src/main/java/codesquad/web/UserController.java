@@ -15,41 +15,37 @@ public class UserController {
     private UserRepository userRepository;
 
 
-    @GetMapping("")
+    @GetMapping
     public String list(Model model) {
         model.addAttribute("users", userRepository.findAll());
         return "/user/list";
     }
 
-    @PostMapping("")
+    @PostMapping
     public String create(User user) {
         userRepository.save(user);
         return "redirect:/users";
     }
 
     @GetMapping("/{id}")
-    public String show(@PathVariable long id, Model model) {
+    public String show(@PathVariable Long id, Model model) {
         model.addAttribute("user", userRepository.findById(id).get());
         return "/user/profile";
     }
 
     @GetMapping("/{id}/form")
-    public String updateForm(@PathVariable long id, Model model) {
+    public String updateForm(@PathVariable Long id, Model model) {
         model.addAttribute("user", userRepository.findById(id).get());
         model.addAttribute("id", id);
         return "/user/updateForm";
     }
 
     @PutMapping("/{id}")
-    public String update(@PathVariable int id, User user) {
-        if (verifyUser(user.getUserId(), user.getPassword())) {
-            userRepository.save(user);
-        }
+    public String update(@PathVariable Long id, User newUser) {
+        User user = userRepository.findById(id).get();
+        user.update(newUser);
+        userRepository.save(user);
         return "redirect:/users";
-    }
-
-    private boolean verifyUser(String userId, String password) {
-        return userRepository.findByUserIdAndPassword(userId, password) != null;
     }
 
 }

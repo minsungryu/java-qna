@@ -1,5 +1,7 @@
 package codesquad.domain;
 
+import org.springframework.web.bind.annotation.ModelAttribute;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -9,16 +11,18 @@ public class Question {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(length = 10, nullable = false)
     private String writer;
 
-    @Column
+    @Column(nullable = false)
     private String title;
 
+    @Lob
     @Column
     private String contents;
 
     public Question() {
+
     }
 
     public Question(Long id, String writer, String title, String contents) {
@@ -60,6 +64,12 @@ public class Question {
         this.contents = contents;
     }
 
+    public void update(Question newQuestion) {
+        this.writer = newQuestion.writer;
+        this.title = newQuestion.title;
+        this.contents = newQuestion.contents;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -73,4 +83,5 @@ public class Question {
     public int hashCode() {
         return Objects.hash(id, writer);
     }
+
 }
